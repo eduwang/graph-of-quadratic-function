@@ -1,0 +1,74 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    }
+
+canvas, #videoElement {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+object-fit: cover;
+z-index: -1; /* Ensure the canvas and video are behind other elements */
+    }
+
+
+#controller {
+position: absolute;
+bottom: 10px; /* Adjust this value to change the distance from the bottom */
+left: 50%;
+transform: translateX(-50%);
+text-align: center;
+background-color: rgba(250, 235, 215, 0.7); /* 'antiquewhite' with 50% opacity */
+box-shadow: inset;
+padding-left: 10px;
+padding-right: 10px;
+border-radius: 10px;
+}
+
+#controller input[type="text"] {
+    width: 60px;  /* Increase width */
+    height: 30px; /* Increase height */
+    font-size: 16px; /* Increase font size for better readability */
+    padding: 5px; /* Add padding for better spacing */
+}
+    
+#controller button{
+    border-radius: 20px;
+}
+.toggle-grid {
+    position: absolute;
+    top: 20px; /* Distance from the top of the window */
+    right: 20px; /* Distance from the right side of the window */
+    z-index: 100; /* Ensure the button is above other elements */
+}
+
+.toggle-grid button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.toggle-grid button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+   @media (max-width: 480px) {
+     #controller input[type="number"] {
+       width: 100px !important;
+       height: 40px !important;
+     }
+
+     #controller button {
+       width: 100px !important;
+       height: 40px !important;
+     }
+   }

@@ -1,3 +1,40 @@
+<!DOCTYPE html>
 <html>
-    hello WOOORLD
+  <head>
+    <meta charset="UTF-8">
+    <script type="importmap">
+      {
+        "imports":{
+          "three": "https://unpkg.com/three@v0.153.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@v0.153.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="styles.css"> <!-- CSS 파일 링크 -->
+    <script type = "module" src ="./app.js"></script>
+
+  </head>
+
+  <body>
+    <div>
+      <video id="videoElement" autoplay></video>
+    </div>
+    <div class="toggle-grid">
+        <button id="toggleGridButton">격자 숨기기</button>
+    </div>
+    <div id="controller"> 
+      <p>
+        a: <input id="inputA" type="text" value="1" style="width: 30px; height: 20px;">, 
+        b: <input id="inputB" type="text" value="0" style="width: 30px; height: 20px;">, 
+        c: <input id="inputC" type="text" value="0" style="width: 30px; height: 20px;">  
+      </p>
+      <p>
+        <button id="updateButton"> \[ y=ax^2+bx+c \] 그리기 </button>
+        <button id="updateButton-2"> \[y=a(x-b)^2+c\]그리기 </button>
+      </p> 
+    </div>
+
+  </body>
 </html>
