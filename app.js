@@ -11,9 +11,13 @@ var cylinderGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2000, 32);
 var cylinderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
 var xAxis = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
 xAxis.rotation.z = Math.PI / 2; // Rotate 90 degrees to align with the x-axis
+xAxis.position.z = -0.1; // Move X-axis slightly back on the z-axis
+
 scene.add(xAxis);
 
 var yAxis = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+yAxis.position.z = -0.1; // Move X-axis slightly back on the z-axis
+
 scene.add(yAxis);
 
 // Add grid
@@ -60,6 +64,8 @@ var points = [];
 
 // Function to update function graph
 function updateFunctionGraph() {
+    removeAllGraphs();
+
     points = []; // Reset points array
     scene.children.forEach(child => {
         if (child instanceof THREE.Points) {
@@ -90,6 +96,8 @@ function updateFunctionGraph() {
 }
 
 function updateFunctionGraph2() {
+    removeAllGraphs();
+
     points = []; // Reset points array
     scene.children.forEach(child => {
         if (child instanceof THREE.Points) {
@@ -136,6 +144,87 @@ toggleGridButton.addEventListener('click', function () {
         toggleGridButton.textContent = "격자 표시"; // Update button text
     }
 });
+
+// Step 3: Create points representing the function
+function createFunctionGraph(a, b, c) {
+    var points = [];
+    for (var i = -50; i <= 50; i += 0.01) {
+        var y = quadraticFunction(i, a, b, c);
+        points.push(new THREE.Vector3(i, y, 0));
+    }
+    return points;
+}
+
+// Step 4: Render points
+function renderFunctionGraph(points, color) {
+    var geometry = new THREE.BufferGeometry().setFromPoints(points);
+    var material = new THREE.PointsMaterial({
+        size: 0.35, // Adjust the size of the points
+        color: color || 0xB6D7A8 // Set color for the points
+    });
+
+    var quadraticPoints = new THREE.Points(geometry, material);
+    scene.add(quadraticPoints);
+    return quadraticPoints;
+}
+
+// Function to remove all existing graphs
+function removeAllGraphs() {
+    scene.children = scene.children.filter(child => {
+        if (child instanceof THREE.Points) {
+            scene.remove(child);
+            return false;
+        }
+        return true;
+    });
+}
+
+// Animation logic
+function animateGraph() {
+    // Disable the button while animation is running
+    const button = document.getElementById('showAnimation');
+    button.disabled = true;
+    updateButton.disabled = true;
+    updateButton2.disabled = true;
+
+    // Remove all existing graphs
+    removeAllGraphs();
+
+    const a = Math.random() * 2 + 1; // a is random between 1 and 3
+    const b = 0;
+
+    // Create the static graph with c = 0
+    const staticPoints = createFunctionGraph(a, b, 0);
+    renderFunctionGraph(staticPoints, 0xB6D7A8); // Static graph with a red color
+
+    let c = 0;
+    const cMax = 5;
+    const cStep = 0.03; // Smaller step for slower animation
+
+    let animatedGraph;
+    function updateGraph() {
+        if (animatedGraph) {
+            scene.remove(animatedGraph);
+        }
+
+        const animatedPoints = createFunctionGraph(a, b, c);
+        animatedGraph = renderFunctionGraph(animatedPoints, 0xff4f69); // Animated graph with a green color
+
+        c += cStep;
+        if (c <= cMax) {
+            requestAnimationFrame(updateGraph);
+        } else {
+            // Re-enable the button after the animation is complete
+            button.disabled = false;
+            updateButton.disabled = false;
+            updateButton2.disabled = false;
+        }
+    }
+
+    updateGraph();
+}
+// Button click event listener
+document.getElementById('showAnimation').addEventListener('click', animateGraph);
 
 // Position the camera
 camera.position.z = 30;

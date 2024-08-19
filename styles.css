@@ -49,6 +49,7 @@ border-radius: 10px;
 }
 
 .toggle-grid button {
+    margin-bottom: 3px;
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 5px;
