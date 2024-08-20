@@ -65,6 +65,8 @@ var points = [];
 // Function to update function graph
 function updateFunctionGraph() {
     removeAllGraphs();
+    toggleTranslationInfo(false);
+
 
     points = []; // Reset points array
     scene.children.forEach(child => {
@@ -97,6 +99,7 @@ function updateFunctionGraph() {
 
 function updateFunctionGraph2() {
     removeAllGraphs();
+    toggleTranslationInfo(false);
 
     points = []; // Reset points array
     scene.children.forEach(child => {
@@ -178,14 +181,28 @@ function removeAllGraphs() {
         return true;
     });
 }
+// Function to update the <text> element with the current value of c
+function updateTranslationInfo(c) {
+    const translationInfoText = document.querySelector('.translation-info text');
+    translationInfoText.textContent = c.toFixed(2); // Update with the value of c, rounded to 2 decimals
+}
+
+// Function to show or hide the translation-info div
+function toggleTranslationInfo(show) {
+    const translationInfoDiv = document.querySelector('.translation-info');
+    translationInfoDiv.style.display = show ? 'block' : 'none';
+}
 
 // Animation logic
 function animateGraph() {
     // Disable the button while animation is running
-    const button = document.getElementById('showAnimation');
+    const button = document.getElementById('showYTranslation');
     button.disabled = true;
     updateButton.disabled = true;
     updateButton2.disabled = true;
+
+    // Show the translation-info div
+    toggleTranslationInfo(true);
 
     // Remove all existing graphs
     removeAllGraphs();
@@ -195,10 +212,10 @@ function animateGraph() {
 
     // Create the static graph with c = 0
     const staticPoints = createFunctionGraph(a, b, 0);
-    renderFunctionGraph(staticPoints, 0xB6D7A8); // Static graph with a red color
+    renderFunctionGraph(staticPoints, 0xB6D7A8); // Static graph with a green color
 
     let c = 0;
-    const cMax = 5;
+    const cMax = Math.random()*2 + 4;
     const cStep = 0.03; // Smaller step for slower animation
 
     let animatedGraph;
@@ -208,7 +225,10 @@ function animateGraph() {
         }
 
         const animatedPoints = createFunctionGraph(a, b, c);
-        animatedGraph = renderFunctionGraph(animatedPoints, 0xff4f69); // Animated graph with a green color
+        animatedGraph = renderFunctionGraph(animatedPoints, 0xff4f69); // Animated graph with a different color
+
+        // Update the <text> element with the current value of c
+        updateTranslationInfo(c);
 
         c += cStep;
         if (c <= cMax) {
@@ -218,13 +238,16 @@ function animateGraph() {
             button.disabled = false;
             updateButton.disabled = false;
             updateButton2.disabled = false;
+
+            // Hide the translation-info div
         }
     }
 
     updateGraph();
 }
+
 // Button click event listener
-document.getElementById('showAnimation').addEventListener('click', animateGraph);
+document.getElementById('showYTranslation').addEventListener('click', animateGraph);
 
 // Position the camera
 camera.position.z = 30;

@@ -59,6 +59,18 @@ border-radius: 10px;
     cursor: pointer;
 }
 
+.translation-info {
+    background-color: rgba(255, 79, 105, 0.7);
+    border-radius: 5px;
+    padding-left: 2%;
+    padding-right: 2%;
+    position: absolute;
+    top: 45%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    display: none;
+  }
+
 .toggle-grid button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
