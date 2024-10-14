@@ -7,17 +7,26 @@ var renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// 초기 카메라 위치 저장
+const initialCameraPosition = {
+    x: 0, // 처음 카메라의 x 위치
+    y: 2, // 처음 카메라의 y 위치
+    z: 30 // 처음 카메라의 z 위치
+};
+
+// 카메라 초기 위치 설정
+camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
+
+
 var cylinderGeometry = new THREE.CylinderGeometry(0.03, 0.03, 2000, 32);
 var cylinderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
 var xAxis = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
 xAxis.rotation.z = Math.PI / 2; // Rotate 90 degrees to align with the x-axis
 xAxis.position.z = -0.1; // Move X-axis slightly back on the z-axis
-
 scene.add(xAxis);
 
 var yAxis = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
 yAxis.position.z = -0.1; // Move X-axis slightly back on the z-axis
-
 scene.add(yAxis);
 
 // Add grid
@@ -42,7 +51,12 @@ var gridGeometry = new THREE.BufferGeometry().setFromPoints(gridPoints);
 var grid = new THREE.LineSegments(gridGeometry, gridMaterial);
 grid.computeLineDistances(); // Required for dashed lines to appear
 
-scene.add(grid);
+// Function to reset camera position
+function resetCameraPosition() {
+    camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
+}
+
+//scene.add(grid);
 
 // Step 2: Define quadratic function
 function quadraticFunction(x, a, b, c) {
@@ -58,15 +72,13 @@ const inputA = document.getElementById('inputA');
 const inputB = document.getElementById('inputB');
 const inputC = document.getElementById('inputC');
 const updateButton = document.getElementById('updateButton');
-const updateButton2 = document.getElementById('updateButton-2');
+const updateButton2 = document.getElementById('updateButton2');
 
 var points = [];
 
 // Function to update function graph
 function updateFunctionGraph() {
     removeAllGraphs();
-    toggleTranslationInfo(false);
-
 
     points = []; // Reset points array
     scene.children.forEach(child => {
@@ -99,7 +111,6 @@ function updateFunctionGraph() {
 
 function updateFunctionGraph2() {
     removeAllGraphs();
-    toggleTranslationInfo(false);
 
     points = []; // Reset points array
     scene.children.forEach(child => {
@@ -135,7 +146,7 @@ updateButton.addEventListener('click', updateFunctionGraph);
 updateButton2.addEventListener('click', updateFunctionGraph2);
 
 // Toggle grid visibility
-let gridVisible = true;
+let gridVisible = false;
 
 toggleGridButton.addEventListener('click', function () {
     gridVisible = !gridVisible; // Toggle the visibility state
@@ -181,116 +192,156 @@ function removeAllGraphs() {
         return true;
     });
 }
-// Function to update the <text> element with the current value of c
-function updateTranslationInfo(c) {
-    const translationInfoText = document.querySelector('.translation-info text');
-    translationInfoText.textContent = c.toFixed(2); // Update with the value of c, rounded to 2 decimals
-}
 
-// Function to show or hide the translation-info div
-function toggleTranslationInfo(show) {
-    const translationInfoDiv = document.querySelector('.translation-info');
-    translationInfoDiv.style.display = show ? 'block' : 'none';
-}
 
 // Animation logic
+// 슬라이더를 사용한 그래프 애니메이션
 function animateGraph() {
-    // Disable the button while animation is running
+    resetCameraPosition();
     const button = document.getElementById('showYTranslation');
-    button.disabled = true;
+    button.style.display = "none";
     updateButton.disabled = true;
     updateButton2.disabled = true;
 
-    // Show the translation-info div
-    toggleTranslationInfo(true);
+    const cSlider = document.getElementById('cSlider');
+    const cValue = document.getElementById('cValue');
 
-    // Remove all existing graphs
-    removeAllGraphs();
+    cSlider.style.display = "block";
+    // cValue.style.display = "inline-block";
 
-    const a = Math.random() * 2 + 1; // a is random between 1 and 3
+    const a = Math.random() * 3 + 0.5;
     const b = 0;
 
-    // Create the static graph with c = 0
-    const staticPoints = createFunctionGraph(a, b, 0);
-    renderFunctionGraph(staticPoints, 0xB6D7A8); // Static graph with a green color
+    removeAllGraphs();
 
-    let c = 0;
-    const cMax = Math.random()*2 + 4;
-    const cStep = 0.03; // Smaller step for slower animation
+    const staticPoints = createFunctionGraph(a, b, 0);
+    renderFunctionGraph(staticPoints, 0xB6D7A8);
 
     let animatedGraph;
-    function updateGraph() {
+    let c = parseFloat(cSlider.value);
+
+    // 기존 이벤트 리스너 제거
+    const newSlider = cSlider.cloneNode(true);
+    cSlider.parentNode.replaceChild(newSlider, cSlider);
+
+    newSlider.addEventListener('input', function () {
+        resetCameraPosition();
+        c = parseFloat(newSlider.value);
+        // cValue.textContent = `c: ${c.toFixed(2)}`;
+
+        // 이전 그래프 제거
         if (animatedGraph) {
             scene.remove(animatedGraph);
         }
-
         const animatedPoints = createFunctionGraph(a, b, c);
-        animatedGraph = renderFunctionGraph(animatedPoints, 0xff4f69); // Animated graph with a different color
+        animatedGraph = renderFunctionGraph(animatedPoints, 0xff4f69);
+    });
 
-        // Update the <text> element with the current value of c
-        updateTranslationInfo(c);
+    button.disabled = false;
+    updateButton.disabled = false;
+    updateButton2.disabled = false;
 
-        c += cStep;
-        if (c <= cMax) {
-            requestAnimationFrame(updateGraph);
-        } else {
-            // Re-enable the button after the animation is complete
-            button.disabled = false;
-            updateButton.disabled = false;
-            updateButton2.disabled = false;
+    const resetScene = document.getElementById('go-back-to-controller');
+    resetScene.style.display = 'inline';
 
-            // Hide the translation-info div
-        }
-    }
-
-    updateGraph();
+    const controllerPanel = document.getElementById('controller');
+    controllerPanel.style.display = 'none';
 }
+
 
 // Button click event listener
 document.getElementById('showYTranslation').addEventListener('click', animateGraph);
 
+document.getElementById('go-back-to-controller').addEventListener('click', resetScene);
+function resetScene() {
+    const observeTranslation = document.getElementById('showYTranslation');
+    observeTranslation.style.display = 'inline';
+
+    const cSlider = document.getElementById('cSlider');
+    const cValue = document.getElementById('cValue');
+
+    cSlider.style.display = "none";
+    cValue.style.display = "none";
+
+    const controllerPanel = document.getElementById('controller');
+    controllerPanel.style.display = 'block'
+
+    const resetScene = document.getElementById('go-back-to-controller');
+    resetScene.style.display = 'none';
+    removeAllGraphs();
+
+    // 카메라 위치를 초기 위치로 리셋
+    resetCameraPosition();
+    cSlider.value = 0;
+
+
+}
+
 // Position the camera
 camera.position.z = 30;
 camera.position.y = 2;
-// 설정할 x와 y의 최대 및 최소 값
-const minX = -30;
-const maxX = 30;
-const minY = -30;
-const maxY = 30;
 
-// Touch control for camera movement
+// Detect if the touch is on the slider
+let isTouchOnSlider = false;
+
+// 슬라이더 요소
+const cSlider = document.getElementById('cSlider');
+
+// 슬라이더에서 터치가 시작되었는지 감지
+cSlider.addEventListener('touchstart', function(event) {
+    isTouchOnSlider = true; // 슬라이더에서 터치가 시작되면 플래그를 true로 설정
+}, { passive: true });
+
+cSlider.addEventListener('touchend', function(event) {
+    isTouchOnSlider = false; // 터치가 끝나면 다시 플래그를 false로 설정
+}, { passive: true });
+
+// 슬라이더 외부에서의 터치 시작 감지
+window.addEventListener('touchstart', function(event) {
+    if (!cSlider.contains(event.target)) {
+        isTouchOnSlider = false; // 슬라이더 외부에서 터치가 시작되면 플래그를 false로 설정
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+    }
+}, { passive: true });
+
+// General screen touch logic
 let touchStartX = 0;
 let touchStartY = 0;
 
-window.addEventListener('touchstart', function(event) {
-    touchStartX = event.touches[0].clientX;
-    touchStartY = event.touches[0].clientY;
-});
+// Set the minimum and maximum bounds for camera movement
+const minX = -20;
+const maxX = 20;
+const minY = -20;
+const maxY = 20;
 
+
+// 터치로 카메라 이동 처리
 window.addEventListener('touchmove', function(event) {
-    const touchEndX = event.touches[0].clientX;
-    const touchEndY = event.touches[0].clientY;
+    if (!isTouchOnSlider) { // 슬라이더가 아닌 경우에만 카메라 이동을 처리
+        const touchEndX = event.touches[0].clientX;
+        const touchEndY = event.touches[0].clientY;
 
-    const deltaX = (touchEndX - touchStartX) * 0.03; // Sensitivity factor
-    const deltaY = (touchEndY - touchStartY) * 0.03;
+        const deltaX = (touchEndX - touchStartX) * 0.03; // Sensitivity factor
+        const deltaY = (touchEndY - touchStartY) * 0.03;
 
-    // 업데이트된 위치 계산
-    let newPosX = camera.position.x - deltaX;
-    let newPosY = camera.position.y + deltaY;
+        let newPosX = camera.position.x - deltaX;
+        let newPosY = camera.position.y + deltaY;
 
-    // x와 y에 대한 제한 적용
-    if (newPosX < minX) newPosX = minX;
-    if (newPosX > maxX) newPosX = maxX;
-    if (newPosY < minY) newPosY = minY;
-    if (newPosY > maxY) newPosY = maxY;
+        if (newPosX < minX) newPosX = minX;
+        if (newPosX > maxX) newPosX = maxX;
+        if (newPosY < minY) newPosY = minY;
+        if (newPosY > maxY) newPosY = maxY;
 
-    // 카메라의 새로운 위치 설정
-    camera.position.x = newPosX;
-    camera.position.y = newPosY;
+        camera.position.x = newPosX;
+        camera.position.y = newPosY;
 
-    touchStartX = touchEndX;
-    touchStartY = touchEndY;
-});
+        touchStartX = touchEndX;
+        touchStartY = touchEndY;
+    }
+}, { passive: true });
+
+
 
 // Access the rear camera
 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
