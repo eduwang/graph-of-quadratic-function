@@ -345,8 +345,11 @@ window.addEventListener('touchmove', function(event) {
 
 
 // Access the rear camera
-navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-    .then(function (stream) {
+navigator.mediaDevices.getUserMedia({ 
+    video: { 
+        facingMode: {ideal: 'environment'} 
+    } 
+}).then(function (stream) {
         var video = document.getElementById('videoElement');
         video.srcObject = stream;
     })
