@@ -205,9 +205,10 @@ function animateGraph() {
 
     const cSlider = document.getElementById('cSlider');
     const cValue = document.getElementById('cValue');
+    const qValue = document.getElementById('qValue')
 
     cSlider.style.display = "block";
-    // cValue.style.display = "inline-block";
+    qValue.style.display = "inline-block";
 
     const a = Math.random() * 3 + 0.5;
     const b = 0;
@@ -227,7 +228,7 @@ function animateGraph() {
     newSlider.addEventListener('input', function () {
         resetCameraPosition();
         c = parseFloat(newSlider.value);
-        // cValue.textContent = `c: ${c.toFixed(2)}`;
+        cValue.textContent = `${c.toFixed(2)}`;
 
         // 이전 그래프 제거
         if (animatedGraph) {
@@ -258,10 +259,10 @@ function resetScene() {
     observeTranslation.style.display = 'inline';
 
     const cSlider = document.getElementById('cSlider');
-    const cValue = document.getElementById('cValue');
+    const qValue = document.getElementById('cValue');
 
     cSlider.style.display = "none";
-    cValue.style.display = "none";
+    qValue.style.display = "none";
 
     const controllerPanel = document.getElementById('controller');
     controllerPanel.style.display = 'block'

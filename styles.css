@@ -73,15 +73,18 @@ border-radius: 10px;
   width: 500px; /* 슬라이더의 길이 */
   height: 30px;
   position: absolute;
-  left: 10px; /* toggle-grid의 왼쪽에 배치 */
+  left: 5%; /* toggle-grid의 왼쪽에 배치 */
   top: 60%; /* 화면에서 중간에 배치 */
   margin-top: -75px; /* 슬라이더 위치 보정 */
 }
 
-#cValue {
+#qValue {
   position: absolute;
-  left: 30px; /* 슬라이더 옆에 위치 */
+  left: 60%; /* 슬라이더 옆에 위치 */
   top: calc(50% - 15px); /* 슬라이더 옆 중앙 */
+  background-color: aliceblue;
+  border-radius: 30%;
+  padding: 0.5%;
 }
 
    @media (max-width: 480px) {
