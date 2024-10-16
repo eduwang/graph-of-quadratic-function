@@ -27,6 +27,22 @@
       }
 
     </style>
+    <script>
+      // DOM이 모두 로드된 후에 실행되도록 설정
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('startCamera').addEventListener('click', function () {
+          console.log('Camera button clicked');
+          navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: 'environment' } }
+          }).then(function (stream) {
+            var video = document.getElementById('videoElement');
+            video.srcObject = stream;
+          }).catch(function (error) {
+            console.error('Error accessing the camera: ', error);
+          });
+        });
+      });
+    </script>
 
   </head>
 
@@ -49,6 +65,9 @@
         a: <input id="inputA" type="text" value="1" style="width: 30px; height: 20px;">, 
         b: <input id="inputB" type="text" value="0" style="width: 30px; height: 20px;">, 
         c: <input id="inputC" type="text" value="0" style="width: 30px; height: 20px;">  
+      </p>
+      <p>
+        <button id="startCamera">Start Camera</button>
       </p>
       <p>
         <button id="updateButton"> \[ y=ax^2+bx+c \] 그리기 </button>
