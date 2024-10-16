@@ -1,4 +1,23 @@
 import * as THREE from 'three';
+import {MindARThree} from 'mindar-image-three';
+
+document.addEventListener('DOMContentLoaded',() => {
+    const start = async () => {
+        // initialize MindAR 
+        console.log("MindAR Start")
+        const mindarThree = new MindARThree({
+          container: document.body,
+        });
+        const {camera} = mindarThree;
+        await mindarThree.start();
+        renderer.setAnimationLoop(() => {
+            renderer.render(camera);
+            console.log("MindAR Start")
+          });
+    };
+    start();
+});
+
 
 // Step 1: Set up the scene
 var scene = new THREE.Scene();
@@ -344,23 +363,23 @@ window.addEventListener('touchmove', function(event) {
 
 
 
-// Access the rear camera
-navigator.mediaDevices.getUserMedia({ 
-    video: { 
-        facingMode: {ideal: 'environment'} 
-    } 
-}).then(function (stream) {
-        var video = document.getElementById('videoElement');
-        video.srcObject = stream;
-    })
-    .catch(function (error) {
-        console.error('Error accessing the camera: ', error);
-    });
+// // Access the rear camera
+// navigator.mediaDevices.getUserMedia({ 
+//     video: { 
+//         facingMode: {ideal: 'environment'} 
+//     } 
+// }).then(function (stream) {
+//         var video = document.getElementById('videoElement');
+//         video.srcObject = stream;
+//     })
+//     .catch(function (error) {
+//         console.error('Error accessing the camera: ', error);
+//     });
 
 // Render the scene
 function animate() {
     requestAnimationFrame(animate);
-    renderer.render(scene, camera);
+    renderer.render(scene);
 }
 
 animate();
