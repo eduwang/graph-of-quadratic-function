@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script type="importmap">
+      {
+        "imports":{
+          "three": "https://unpkg.com/three@v0.153.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@v0.153.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="styles.css"> <!-- CSS 파일 링크 -->
+    <script type = "module" src ="./app_test.js"></script>
+    <title>이차함수 그래프의 평행이동</title>
+    <style>
+      #videoElement {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover; /* 비디오가 화면에 꽉 차도록 */
+          z-index: -1; /* 다른 요소들 위에 표시되도록 */
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+    <div>
+      <video id="videoElement" autoplay></video>
+    </div>
+    <div class="toggle-grid">
+        <button id="toggleGridButton">격자 표시</button>
+        <button id="showYTranslation">\(y=ax^{2}\)의 \(y\)축 방향으로의 <br>평행이동 관찰하기</button>
+        <button id="go-back-to-controller" style="display: none;">돌아가기</button>
+    </div>
+    <!-- 슬라이더를 왼쪽으로 이동 -->
+    <input type="range" id="cSlider" min="-5" max="5" step="0.02" value="0" style="display: none;">
+    <div id="qValue" style="display: none;">
+      \(q\): <span id="cValue" style="font-size: 18px;">0</span>
+    </div>
+    <div id="controller"> 
+      <p>
+        a: <input id="inputA" type="text" value="1" style="width: 30px; height: 20px;">, 
+        b: <input id="inputB" type="text" value="0" style="width: 30px; height: 20px;">, 
+        c: <input id="inputC" type="text" value="0" style="width: 30px; height: 20px;">  
+      </p>
+      <p>
+        <button id="updateButton"> \[ y=ax^2+bx+c \] 그리기 </button>
+        <button id="updateButton2"> \[y=a(x-b)^2+c\]그리기 </button>
+      </p> 
+    </div>
+
+  </body>
+</html>
