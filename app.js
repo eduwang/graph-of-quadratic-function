@@ -30,7 +30,7 @@ yAxis.position.z = -0.1; // Move X-axis slightly back on the z-axis
 scene.add(yAxis);
 
 // Add grid
-var gridMaterial = new THREE.LineDashedMaterial({ linewidth: 1, color: 0xCCCCCC, dashSize: 0.2, gapSize: 0.2, opacity: 0.1 });
+var gridMaterial = new THREE.LineDashedMaterial({ linewidth: 1, color: 0x666666, dashSize: 0.2, gapSize: 0.2, opacity: 0.});
 var gridPoints = [];
 
 // Create X axis grid lines
@@ -196,6 +196,9 @@ function removeAllGraphs() {
 
 // Animation logic
 // 슬라이더를 사용한 그래프 애니메이션
+let sliderListenerAdded = false; // 슬라이더 리스너가 추가되었는지 확인하는 플래그
+
+// 슬라이더를 사용한 그래프 애니메이션
 function animateGraph() {
     resetCameraPosition();
     const button = document.getElementById('showYTranslation');
@@ -206,11 +209,14 @@ function animateGraph() {
     const cSlider = document.getElementById('cSlider');
     const cValue = document.getElementById('cValue');
     const qValue = document.getElementById('qValue')
+    const translationInfoQ = document.getElementById('translation-info-q');
+    const translationInfo0 = document.getElementById('translation-info-0');
 
     cSlider.style.display = "block";
     qValue.style.display = "inline-block";
+    translationInfo0.style.display = "block";
 
-    const a = Math.random() * 3 + 0.5;
+    const a = Math.random() * 0.5 + 0.5;
     const b = 0;
 
     removeAllGraphs();
@@ -226,6 +232,7 @@ function animateGraph() {
     cSlider.parentNode.replaceChild(newSlider, cSlider);
 
     newSlider.addEventListener('input', function () {
+        translationInfoQ.style.display = "block";
         resetCameraPosition();
         c = parseFloat(newSlider.value);
         cValue.textContent = `${c.toFixed(2)}`;
@@ -259,10 +266,16 @@ function resetScene() {
     observeTranslation.style.display = 'inline';
 
     const cSlider = document.getElementById('cSlider');
-    const qValue = document.getElementById('cValue');
+    const qValue = document.getElementById('qValue');
+    const cValue = document.getElementById('cValue');
+    const translationInfoQ = document.getElementById('translation-info-q');
+    const translationInfo0 = document.getElementById('translation-info-0');
 
     cSlider.style.display = "none";
     qValue.style.display = "none";
+    translationInfoQ.style.display = "none";
+    translationInfo0.style.display = "none";
+    cValue.textContent = `${0}`;
 
     const controllerPanel = document.getElementById('controller');
     controllerPanel.style.display = 'block'

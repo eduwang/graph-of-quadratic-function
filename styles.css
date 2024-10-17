@@ -83,8 +83,23 @@ border-radius: 10px;
   left: 60%; /* 슬라이더 옆에 위치 */
   top: calc(50% - 15px); /* 슬라이더 옆 중앙 */
   background-color: aliceblue;
-  border-radius: 30%;
+  border-radius: 10px;
   padding: 0.5%;
+}
+#translation-info-q{
+  position: absolute;
+  left: 30%;
+  top: 40%;
+  text-align: right;
+  display: none;
+}
+
+#translation-info-0{
+  position: absolute;
+  left: 30%;
+  top: 55%;
+  text-align: right;
+  display: none;
 }
 
    @media (max-width: 480px) {
